@@ -1,9 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:learn_flutter/provider/provider/ui/control_panel.dart';
-import 'package:learn_flutter/provider/provider/ui/logo.dart';
-import 'logo_model.dart';
 import 'package:provider/provider.dart';
+import 'logo_model.dart';
+
 //demo: InheritedWidget用法
 void main() {
   runApp(const MyApp());
@@ -47,8 +46,8 @@ class _MyAppState extends State<MyApp> {
             color: color,
             child: const Column(
               children: [
-                Logo(),
-                ControllerPanel(),
+                // Logo(),
+                // ControllerPanel(),
               ],
             ),
           ),
