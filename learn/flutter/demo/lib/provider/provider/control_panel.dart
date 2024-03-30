@@ -17,21 +17,21 @@ class ControllerPanel extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("flipX:"),
+              const Text("flipX:"),
               Switch(value: model.flipX, onChanged: (value)=>model.flipX=value),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("flipY:"),
+              const Text("flipY:"),
               Switch(value: model.flipY, onChanged: (value)=>model.flipY=value),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Size:"),
+              const Text("Size:"),
               Slider(min: 50,
                   max: 500,
                   value: model.size, onChanged: (value)=>model.size=value),
