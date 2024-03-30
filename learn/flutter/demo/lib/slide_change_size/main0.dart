@@ -3,7 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../provider/divider_resize_line/divider_resize_line.dart';
+import 'divider_resize_line.dart';
+
 
 void main() {
   runApp(const MyApp());

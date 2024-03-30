@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'control_panel.dart';
 import 'logo_model.dart';
+import 'logo_widget.dart';
 
 //demo: InheritedWidget用法
 void main() {
@@ -46,8 +48,8 @@ class _MyAppState extends State<MyApp> {
             color: color,
             child: const Column(
               children: [
-                // Logo(),
-                // ControllerPanel(),
+                Logo(),
+                ControllerPanel(),
               ],
             ),
           ),
@@ -68,7 +70,6 @@ class ColorChange extends InheritedWidget{
   bool updateShouldNotify(covariant ColorChange oldWidget) {
     return oldWidget.color!=color;
   }
-
 }
 
 
