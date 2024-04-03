@@ -1,6 +1,10 @@
+import 'dart:async';
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+
+import 'node_image.dart';
 
 class MyImageController extends ImageController with ChangeNotifier {
 
@@ -88,6 +92,10 @@ class ImageController {
     ..isAntiAlias = true
     ..strokeWidth = 1
     ..color = const Color(0xff0168FD);
+  final _paintCtrlRect = Paint()
+    ..isAntiAlias = true
+    ..strokeWidth = 1
+    ..color = Colors.cyanAccent.withAlpha(150);
 
   // BaseNodeModel? bindNodeModel;
   NodeImage? bindImage;
@@ -135,7 +143,7 @@ class ImageController {
     final left = bounds.left;
     final top = bounds.top;
     final right = bounds.right;
-    final bottom = bounds.bottom;
+    final bottom =bounds.bottom;
     ctrlBounds[0].setLTRB(
       left - handleSize,
       top - handleSize,
@@ -186,13 +194,20 @@ class ImageController {
       _paint.color = boundsColor;
     }
     for (var ctrl in ctrlBounds) {
-      print("画四个点");
+      // print("画四个点");
       canvas.drawOval(Rect.fromLTRB(
         ctrl.left + showHandleClip,
         ctrl.top + showHandleClip,
         ctrl.right - showHandleClip,
         ctrl.bottom - showHandleClip,
       ), _paint);
+
+      canvas.drawRect(Rect.fromLTRB(
+        ctrl.left + showHandleClip,
+        ctrl.top + showHandleClip,
+        ctrl.right - showHandleClip,
+        ctrl.bottom - showHandleClip,
+      ),_paintCtrlRect);
     }
     print("ImageController draw...");
   }
@@ -316,69 +331,6 @@ class ImageController {
   }
 }
 
-class NodeImage {
-  static const imageDefaultSize = 230;
-  static const minSize = 16;
-
-  Map<String, MutableRect> imagesBounds = {};
-
-  String src;
-  int? width;
-  int? height;
-  int srcWidth=1440;
-  int srcHeight=1080;
-
-  int get widthNotNull => width ?? srcWidth;
-  int get heightNotNull => height ?? srcHeight;
-
-  NodeImage(
-      this.src, {
-        required this.width,
-        required this.height,
-      });
-
-  static Point<int> formatSize(int srcWidth, int srcHeight) {
-    final ratio = srcWidth / srcHeight;
-    int width = srcWidth;
-    int height = srcHeight;
-    if (srcWidth > NodeImage.imageDefaultSize) {
-      width = NodeImage.imageDefaultSize;
-      height = width ~/ ratio;
-    }
-    if (srcHeight > NodeImage.imageDefaultSize) {
-      height = NodeImage.imageDefaultSize;
-      width = (height * ratio).toInt();
-    }
-    return Point(width, height);
-  }
-
-  static NodeImage buildFromSrc(String src, int srcWidth, int srcHeight) {
-    final newSize = formatSize(srcWidth, srcHeight);
-    return NodeImage(src, width: newSize.x, height: newSize.y);
-  }
-
-  NodeImage copy() {
-    return NodeImage(
-      src,
-      width: width,
-      height: height,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is NodeImage
-        && runtimeType == other.runtimeType
-        && src == other.src
-        && width == other.width
-        && height == other.height;
-    // return super == other;
-  }
-
-  @override
-  int get hashCode => Object.hash(src, width, height);
-
-}
 
 class MutableRect {
 
@@ -455,22 +407,4 @@ class MutableRect {
     return "left:$left top:$top right:$right bottom:$bottom}";
   }
 }
-
-//悬浮绘制层的位置
-class ImgSelectLocator with ChangeNotifier {
-
-  Rect _imgRect=Rect.zero;
-
-  set imgRect(Rect? r) {
-    if(r==null){
-      return;
-    }
-    _imgRect=r;
-    notifyListeners();
-  }
-
-  Rect get imgRect=>_imgRect;
-
-}
-
 
