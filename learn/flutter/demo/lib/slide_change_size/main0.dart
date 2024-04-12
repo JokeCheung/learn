@@ -44,58 +44,18 @@ class _MyHomePageState extends State<MyHomePage> {
         minWidth: 200,
         maxWidth: 1000,
         onDragEnd: (width) async {
-          // _detailExpandedWidth = width;
-          // await MinderEditorSpec.pref
-          //     .setDouble(_prefKey, width);
+          print("结束拖拽!");
         },
         leftChild: Container(
           color: Colors.yellow,
           child: const Center(child: Text("left")),
         ),
         rightChild:  Container(
-            color: Colors.blue,
+            color: Colors.pink,
           child: const Center(child: Text("right")),
         ),
       ),
 
-    );
-  }
-}
-
-
-
-
-class ColorBlock extends StatefulWidget {
-  final Color color;
-  const ColorBlock({super.key, required this.color});
-
-  @override
-  State<ColorBlock> createState() => _ColorBlockState();
-}
-
-class _ColorBlockState extends State<ColorBlock> {
-  bool hover=false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      child: MouseRegion(
-        onEnter: (PointerEnterEvent event){
-          print("onEnter");
-          setState(() {
-            hover=true;
-          });
-        },
-        onExit: (PointerExitEvent event){
-          print("onExit");
-          setState(() {
-            hover=false;
-          });
-        },
-        child: Container(
-          color: hover?Colors.green:widget.color,
-        ),
-      ),
     );
   }
 }
