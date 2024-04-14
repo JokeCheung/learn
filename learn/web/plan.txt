@@ -1,7 +1,0 @@
-】
-】注册功能：invadation参数校验；
-】注册功能：lombok实体类；
-】big_event项目创建结构目录+maven依赖配置；
-】postman安装；
-】MySQL安装+IDEA配置数据库；
-】IntelliJIDEA安装+破解；
