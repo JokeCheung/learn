@@ -41,7 +41,50 @@
       <artifactId>mysql-connector-j</artifactId>
       <version>8.2.0</version>
     </dependency>
+
+    <!--lombok辅助生成get、set、toString类-->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.32</version>
+    </dependency>
+
+    <!--validation参数校验类避免提交的数据不合法-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
   </dependencies>
 
-  111111122
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </project>

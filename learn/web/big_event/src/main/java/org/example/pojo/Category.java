@@ -1,7 +1,10 @@
 package org.example.pojo;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 public class Category {
     private Integer id;//主键ID
     private String categoryName;//分类名称
