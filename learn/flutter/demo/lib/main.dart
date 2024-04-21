@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -34,33 +34,76 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   final detailWidthNotifier = ValueNotifier<double>(0);
+
   // final ValueNotifier<double> controller;
-  Offset offset= Offset.zero;
+  Offset offset = Offset.zero;
+
+  FocusNode focusNode = FocusNode();
+  FocusNode focusNodeText1 = FocusNode();
+  FocusNode focusNodeText2 = FocusNode();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    focusNode.addListener(() {
+      print("焦点改变");
+      print("$focusNode");
+      print("primaryFocus==${FocusManager.instance.primaryFocus}");
+    });
+    // focusNode.addListener(() {
+    //   if(focusNode.hasFocus){
+    //     print("image focusNode hasFocus");
+    //   }else{
+    //     print("image focusNode loseFocus");
+    //   }
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print("object");
-          setState(() {
-            offset=Offset(offset.dx+0.5, offset.dy);
-          });
+          // print("object");
+          focusNodeText2.requestFocus();
         },
       ),
       body: Container(
         color: Colors.grey,
         child: AnimatedSlide(
-          offset:offset,
+          offset: offset,
           curve: Curves.ease,
           duration: const Duration(milliseconds: 500),
-          child: SizedBox(
-            width: 100,
-            height: 100,
-            child: Container(
-              color: Colors.cyan,
+          child: Focus(
+            onKeyEvent: (node, event) {
+              if (event.physicalKey == PhysicalKeyboardKey.backspace) {
+                if(event is KeyDownEvent){
+                  print("退格键按下");
+                }
+
+                if(event is KeyUpEvent){
+                  print("退格键松手");
+                }
+
+              }
+              return KeyEventResult.handled;
+            },
+            child: Column(
+              children: [
+                 TextField(
+                  focusNode: focusNodeText1,
+                ),
+                 TextField(
+                   focusNode: focusNodeText2,
+                ),
+                 ColorBlock(
+                    color: Colors.white,
+                    focusNode: focusNode,
+                  ),
+              ],
             ),
           ),
         ),
@@ -88,40 +131,48 @@ class _MyHomePageState extends State<MyHomePage> {
 //   }
 // }
 
-
 class ColorBlock extends StatefulWidget {
   final Color color;
-  const ColorBlock({super.key, required this.color});
+  final FocusNode focusNode;
+
+  const ColorBlock({super.key, required this.color, required this.focusNode});
 
   @override
-  State<ColorBlock> createState() => _ColorBlockState();
+  State<ColorBlock> createState() => ColorBlockState();
 }
 
-class _ColorBlockState extends State<ColorBlock> {
-  bool hover=false;
+class ColorBlockState extends State<ColorBlock> {
+  bool hover = false;
+
+  FocusNode get focusNode => widget.focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: MouseRegion(
-        onEnter: (PointerEnterEvent event){
-          print("onEnter");
-          setState(() {
-            hover=true;
-          });
+    return Focus(
+      focusNode: widget.focusNode,
+      child: GestureDetector(
+        onTap: () {
+          // print("primaryFocus==${FocusManager.instance.primaryFocus}");
+          // print("focusNode==$focusNode");
+          // debugDumpFocusTree();
+          focusNode.requestFocus();
+          // print("primaryFocus==${FocusManager.instance.primaryFocus}");
+          // print("focusNode==$focusNode");
+          // debugDumpFocusTree();
         },
-        onExit: (PointerExitEvent event){
-          print("onExit");
-          setState(() {
-            hover=false;
-          });
-        },
-        child: Container(
-          color: hover?Colors.green:widget.color,
+        child: SizedBox(
+          width: 100,
+          height: 100,
+          child: Container(
+            color: Colors.cyan,
+          ),
         ),
       ),
     );
   }
 }
-
-

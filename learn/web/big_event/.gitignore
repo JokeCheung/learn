@@ -4,8 +4,6 @@ target/
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###
-src/test/
-target/
 .idea/
 *.iws
 *.iml

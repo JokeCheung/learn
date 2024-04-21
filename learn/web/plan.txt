@@ -1,3 +1,9 @@
+】获取用户信息：ThreadLocal线程隔离，提前在Interceptor保存用户信息；
+】获取用户信息：application配置文件开启驼峰命名和下划线的自动转换数据库字段到user字段，哪怕因为格式问题不对应；
+】获取用户信息：postman在Pre-request Script统一添加token到header；
+】获取用户信息：spring查询结果转换User为json时，忽略某字段；
+】登录功能：访问页面前验证token：interceptor实现&注册&过滤接口；
+】登录功能：登录认证token生成和解析；
 】注册功能：全局异常处理器；
 】注册功能：invadation参数校验；
 】注册功能：lombok生成实体类辅助方法；

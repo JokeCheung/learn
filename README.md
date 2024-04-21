@@ -19,4 +19,5 @@ git clone https://github.com/JokeCheung/learn_flutter.git 	【下载远程库到
 
 Flutter命令：
 flutter create --platforms=windows,macos,linux,android,ios,web .【创建支持的平台】
+flutter  run  --release【构建并选择运行平台】
 
