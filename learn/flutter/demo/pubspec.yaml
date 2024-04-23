@@ -27,6 +27,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/image_demo.png
+    - lib/image_scale/assets/image_scale.png
 
 

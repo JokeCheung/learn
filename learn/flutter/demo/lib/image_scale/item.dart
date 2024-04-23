@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:ui' as ui;
-import 'package:demo/image_demo/painter.dart';
+import 'package:demo/image_scale/painter.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class Item extends StatefulWidget {
 
 class ItemState extends State<Item> {
   static const double headWidth = 50;
-  static const String imgPath = 'assets/image_demo.png';
+  static const String imgPath = 'lib/image_scale/assets/image_scale.png';
   GlobalKey imgKey = GlobalKey();
   double? imgWidth;
   double? imgHeight;
@@ -90,7 +90,7 @@ class ItemState extends State<Item> {
                     child: ImageView(
                       imgKey: imgKey,
                       controller: widget.imageController,
-                      imagePath: "assets/image_demo.png",
+                      imagePath: imgPath,
                       image: image,
                       size: size,
                     ),

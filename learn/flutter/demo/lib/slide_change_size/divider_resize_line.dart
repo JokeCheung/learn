@@ -114,17 +114,17 @@ class DividerResizeLineHorizontalState extends State<DividerResizeLineHorizontal
         Align(
           alignment: Alignment.bottomRight,
           child: MaterialButton(
-          onPressed: (){
-            print("MaterialButton onPressed");
-            if(widget.controller.value==0){
-              widget.controller.value=500;
-            }else{
-              widget.controller.value=0;
-            }
-          },
-          child: const Text(
-            "点击按钮",
-          )
+              onPressed: (){
+                print("MaterialButton onPressed");
+                if(widget.controller.value==0){
+                  widget.controller.value=500;
+                }else{
+                  widget.controller.value=0;
+                }
+              },
+              child: const Text(
+                "点击按钮",
+              )
           ),
         ),
       ],
@@ -141,7 +141,7 @@ class _MainChild extends StatelessWidget {
 
   final ValueNotifier<double> controller;
   final Widget child;
-  
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(

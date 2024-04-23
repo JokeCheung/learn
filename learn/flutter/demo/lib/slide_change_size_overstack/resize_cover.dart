@@ -12,10 +12,11 @@ enum OverPosType {
 }
 
 class ResizeCover extends StatefulWidget {
-  static Color dividerNormal = Colors.grey;
+  static Color dividerNormal = Colors.grey.shade300;
   static Color dividerHover = Colors.blue;
   //指针可拖拉操作的区域大小 显示的线条为 dragLineHitWidth/2
-  static const dragLineHitWidth = 6.0;
+  static const dragLineRegionWidth = 10.0;
+  static const dragLineWidth = 2.0;
 
   const ResizeCover({
     super.key,
@@ -44,19 +45,19 @@ class _ResizeCoverState extends State<ResizeCover> {
   // Offset offset= Offset.zero;
   double width = 0;
 
-  Widget _buildHitLine() {
-    return SizedBox(
-      width: ResizeCover.dragLineHitWidth,
-      height: double.infinity,
-      child: _HitLine(
-        mainChild: widget.overPos,
-        controller: widget.controller,
-        maxWidth: widget.maxWidth,
-        minWidth: widget.minWidth,
-        onDragEnd: widget.onDragEnd,
-      ),
-    );
-  }
+  // Widget _buildHitLine() {
+  //   return SizedBox(
+  //     width: ResizeCover.dragLineRegionWidth,
+  //     height: double.infinity,
+  //     child: _HitLine(
+  //       mainChild: widget.overPos,
+  //       controller: widget.controller,
+  //       maxWidth: widget.maxWidth,
+  //       minWidth: widget.minWidth,
+  //       onDragEnd: widget.onDragEnd,
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -128,140 +129,45 @@ class _OverChild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Widget childContent = Stack(
-    //   children: [
-    //     Row(
-    //       children: [
-    //
-    //         if (overPosType == OverPosType.right)
-    //           const SizedBox(
-    //             width: ResizeLine.dragLineHitWidth,
-    //           ),
-    //
-    //         (){
-    //           //拖拽不执行动画
-    //           if (value.drag) {
-    //             return SizedBox(
-    //               width: value.width,
-    //               height: double.infinity,
-    //               child: child,
-    //             );
-    //             //手动展开执行动画
-    //           } else {
-    //             return AnimatedContainer(
-    //               width: value.width,
-    //               height: double.infinity,
-    //               duration: const Duration(milliseconds: 250),
-    //               child: child,
-    //             );
-    //           }
-    //         }(),
-    //
-    //         if (overPosType == OverPosType.left)
-    //           const SizedBox(
-    //             width: ResizeLine.dragLineHitWidth,
-    //           ),
-    //       ],
-    //     ),
-    //
-    //     Align(
-    //       alignment: Alignment.topRight,
-    //       child: SizedBox(
-    //         width: ResizeLine.dragLineHitWidth,
-    //         height: double.infinity,
-    //         child: _HitLine(
-    //           mainChild: overPosType,
-    //           controller: controller,
-    //           maxWidth: maxWidth,
-    //           minWidth: minWidth,
-    //         ),
-    //       ),
-    //     ),
-    //     // Align(
-    //     //   alignment: Alignment.topRight,
-    //     //   child: Container(
-    //     //     width: 10,
-    //     //     color:Colors.white,
-    //     //   ),
-    //     // )
-    //   ],
-    // );
+
     return ValueListenableBuilder(
       valueListenable: controller,
       builder: (BuildContext context, ControllerModel value, Widget? child) {
-        print("_OverChild value=${value.drag}");
-        //拖拽不执行动画
-        if (value.drag) {
-          return SizedBox(
-            width: value.width,
-            height: double.infinity,
-            child: Stack(
-              children: [
-                SizedBox(
-                    width: max(0, value.width - ResizeCover.dragLineHitWidth/2),
-                    child: child!),
-                if (overPosType == OverPosType.left)
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: SizedBox(
-                      width: ResizeCover.dragLineHitWidth,
-                      child: _HitLine(
-                          controller: controller,
-                          maxWidth: maxWidth,
-                          minWidth: minWidth),
-                    ),
+
+        print("_OverChild drag=${value.drag}");
+        return SizedBox(
+          width: value.width,
+          height: double.infinity,
+          child: Stack(
+            children: [
+              SizedBox(
+                  width: max(0, value.width - ResizeCover.dragLineRegionWidth/2),
+                  child: child!),
+              if (overPosType == OverPosType.left)
+                Align(
+                  alignment: Alignment.topRight,
+                  child: SizedBox(
+                    width: ResizeCover.dragLineRegionWidth,
+                    child: _HitLine(
+                        controller: controller,
+                        maxWidth: maxWidth,
+                        minWidth: minWidth),
                   ),
-                if (overPosType == OverPosType.right)
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: SizedBox(
-                      width: ResizeCover.dragLineHitWidth,
-                      child: _HitLine(
-                          controller: controller,
-                          maxWidth: maxWidth,
-                          minWidth: minWidth),
-                    ),
+                ),
+              if (overPosType == OverPosType.right)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    width: ResizeCover.dragLineRegionWidth,
+                    child: _HitLine(
+                        controller: controller,
+                        maxWidth: maxWidth,
+                        minWidth: minWidth),
                   ),
-              ],
-            ),
-          );
-          //手动展开执行动画
-        } else {
-          return AnimatedContainer(
-            width: value.width,
-            height: double.infinity,
-            duration: const Duration(milliseconds: 250),
-            child: Stack(
-              children: [
-                SizedBox(
-                    width: max(0, value.width - ResizeCover.dragLineHitWidth/2),
-                    child: child!),
-                if (overPosType == OverPosType.left)
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: SizedBox(
-                      width: ResizeCover.dragLineHitWidth,
-                      child: _HitLine(
-                          controller: controller,
-                          maxWidth: maxWidth,
-                          minWidth: minWidth),
-                    ),
-                  ),
-                if (overPosType == OverPosType.right)
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: SizedBox(
-                      width: ResizeCover.dragLineHitWidth,
-                      child: _HitLine(
-                          controller: controller,
-                          maxWidth: maxWidth,
-                          minWidth: minWidth),
-                    ),
-                  ),
-              ],
-            ),
-          );
-        }
+                ),
+            ],
+          ),
+        );
       },
       child: child,
     );
@@ -331,6 +237,7 @@ class _HitLineState extends State<_HitLine>
   }
 
   void _setDragging(bool isDragging) {
+    print("_setDragging isDragging=$isDragging");
     if (_isDragging != isDragging) {
       _isDragging = isDragging;
       _runAnim();
@@ -349,6 +256,7 @@ class _HitLineState extends State<_HitLine>
   }
 
   void _onDragStart(DragStartDetails details) {
+    print("_setDragging ");
     _setDragging(true);
     _width = widget.controller.value.width;
   }
@@ -393,6 +301,7 @@ class _HitLineState extends State<_HitLine>
 
   @override
   Widget build(BuildContext context) {
+    //dragLineRegionWidth区域
     return MouseRegion(
       cursor: SystemMouseCursors.resizeRight,
       onEnter: _onMouseEnter,
@@ -404,10 +313,10 @@ class _HitLineState extends State<_HitLine>
         onHorizontalDragCancel: _onDragCancel,
         onHorizontalDragEnd: _onDragEnd,
         child: Container(
-          color: Colors.transparent,
+          // color: Colors.cyan,
           child: Center(
             child: SizedBox(
-              width: ResizeCover.dragLineHitWidth / 2,
+              width: ResizeCover.dragLineWidth,
               child: AnimatedBuilder(
                 animation: _controller,
                 builder: (context, child) {

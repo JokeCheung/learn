@@ -1,4 +1,4 @@
-import 'package:demo/image_demo/painter.dart';
+import 'package:demo/image_scale/painter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'image_controller.dart';
