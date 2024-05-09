@@ -23,38 +23,34 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: GestureDetector(
-        child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              RenderBox? rootBox =
-                  listKey.currentContext?.findRenderObject() as RenderBox?;
-              if (rootBox != null) {
-                double containerWidth = rootBox.size.width;
-                //图片可以分配到的宽度
-                double newWidth = containerWidth -
-                    TestWidgetState.padding * 2 -
-                    ItemState.headWidth;
-                print("图片可以分配到的宽度:$newWidth");
-              }
-            },
-          ),
-          backgroundColor: Colors.red,
-          body: Align(
-            alignment: Alignment.topCenter,
-            child: TestWidget(
-              key: listKey,
-            ),
+      home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            RenderBox? rootBox =
+                listKey.currentContext?.findRenderObject() as RenderBox?;
+            if (rootBox != null) {
+              double containerWidth = rootBox.size.width;
+              //图片可以分配到的宽度
+              double newWidth = containerWidth -
+                  TestWidgetState.padding * 2 -
+                  ItemState.headWidth;
+              print("图片可以分配到的宽度:$newWidth");
+            }
+          },
+        ),
+        backgroundColor: Colors.red,
+        body: Align(
+          alignment: Alignment.topCenter,
+          child: TestWidget(
+            key: listKey,
           ),
         ),
-        onTap: () {
-          listKey.currentState?.imageController.clearBind();
-          print("outer tap");
-        },
       ),
     );
   }
 }
+
+///////////////////////////////////////////Page////////////////////////////////////
 
 class TestWidget extends StatefulWidget {
   const TestWidget({Key? key}) : super(key: key);
@@ -71,42 +67,45 @@ class TestWidget extends StatefulWidget {
 
 class TestWidgetState extends State<TestWidget> {
   static const double padding = 15;
-
-  MyImageController imageController = MyImageController();
-
   GlobalKey listContentKey = GlobalKey();
-  GlobalKey? imgSelectKey;
+
+  NodeImage? _selectImg;
+
+  set selectImg(NodeImage? img){
+    clearSelectImg();
+    _selectImg=img;
+  }
+
+  NodeImage? get selectImg=>_selectImg;
 
   @override
   Widget build(BuildContext context) {
+
+    List<Widget> children=List.generate(1, (index) {
+      return const Column(
+        children: [
+         Item(),
+         Divider(),
+      ],
+    );
+    });
+
     return SingleChildScrollView(
-      child: Container(
-        width: 300,
-        color: Colors.green.withAlpha(100),
-        child: Padding(
-          padding: const EdgeInsets.all(0),
-          child: Stack(
-            children: [
-              Column(
-                key: listContentKey,
-                children: [
-                  Item(
-                    imageController: imageController,
-                  ),
-                  SizedBox(
-                    height: 2,
-                    child: Container(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Item(
-                    imageController: imageController,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+      child: LayoutBuilder(
+        builder: (context,constraints){
+          return Container(
+            width: constraints.maxWidth/2,
+            color: Colors.green.withAlpha(100),
+            child: Stack(
+              children: [
+                Column(
+                  key: listContentKey,
+                  children: children,
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -117,34 +116,19 @@ class TestWidgetState extends State<TestWidget> {
     setState(() {});
   }
 
-  void clickImg(BuildContext context, NodeImage image,Size scale) {
-    print("onTap");
-
-    RenderBox? itemBox = context.findRenderObject() as RenderBox?;
-    // RenderBox? imgBox =
-    //     imgSelectKey!.currentContext?.findRenderObject() as RenderBox?;
-    RenderBox? listBox =
-        listContentKey.currentContext?.findRenderObject() as RenderBox?;
-    // if (imgBox == null || listBox == null || itemBox == null) {
-    //   print("return掉了");
-    //   return;
-    // }
-    //TestWidget->Column->Image
-    //          ->listBox->imgBox
-    // Offset imgPosInList = imgBox.localToGlobal(Offset.zero, ancestor: listBox);
-    // Offset itemPosInList =
-    // itemBox.localToGlobal(Offset.zero, ancestor: listBox);
-    // Offset imgPosInItem = imgBox.localToGlobal(Offset.zero, ancestor: itemBox);
-    //选中框定位区域参数 坐标基于Column
-    //图片自身区域参数 坐标基于Image
-    double left = 10;
-    double top = 10;
-    double right = scale.width-10;
-    double bottom = scale.height-10;
-    Rect viewBounds = Rect.fromLTWH(left, top, right, bottom);
-    imageController.setImgBound(viewBounds);
-    imageController.bindNodeImage(image);
-
-    print("image 地址=${image.hashCode}");
+  clearSelectImg() {
+    findImageController()?.clearBind();
   }
+
+
+  MyImageController? findImageController(){
+    if(selectImg==null) return null;
+    BuildContext? imageContext=GlobalObjectKey(selectImg!).currentContext;
+    if(imageContext!=null){
+      ImageViewState state=ImageView.of(imageContext);
+      return state.imageController;
+    }
+    return null;
+  }
+
 }

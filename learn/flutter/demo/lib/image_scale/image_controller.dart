@@ -12,36 +12,34 @@ class MyImageController extends ImageController with ChangeNotifier {
   MyImageController({this.viewBounds});
 
   //更新绑定信息
-  @override
-  void updateBind() {
-    print("MyImageController updateBind...");
-    if (viewBounds == null){
-      print("end1");
-      return;
-    }
-    final image = bindImage;
-    if (image == null){
-      print("end2");
-      return clearBind();
-    }
-    int width = image.widthNotNull;
-    int height = image.heightNotNull;
-    if (width <= 0 || height <= 0) {
-      print("end3");
-      return clearBind();
-    }
-    setRatio(width, height);
-    // viewInList.setLTRB(_locationBounds!.left, _locationBounds!.top,
-    //     _locationBounds!.right, _locationBounds!.bottom);
-    //bounds用于四个控制点的击中测试 && 选中框的绘制
-    bounds.setLTRB(viewBounds!.left, viewBounds!.top, viewBounds!.width, viewBounds!.height);
-    print("MyImageController updateBind bounds=$bounds");
-    updateCtrlBounds();
-  }
+  // @override
+  // void updateBind() {
+  //   print("MyImageController updateBind...");
+  //   if (viewBounds == null){
+  //     print("end1");
+  //     return;
+  //   }
+  //   final image = bindImage;
+  //   if (image == null){
+  //     print("end2");
+  //     return clearBind();
+  //   }
+  //   int width = image.widthNotNull;
+  //   int height = image.heightNotNull;
+  //   if (width <= 0 || height <= 0) {
+  //     print("end3");
+  //     return clearBind();
+  //   }
+  //   setRatio(width, height);
+  //   //bounds用于四个控制点的击中测试 && 选中框的绘制
+  //   bounds.setLTWH(viewBounds!.left, viewBounds!.top, viewBounds!.width, viewBounds!.height);
+  //   print("MyImageController updateBind bounds=$bounds");
+  //   updateCtrlBounds();
+  // }
 
   setImgBound(Rect? vb) {
-    print("setImgBound......");
     viewBounds=vb;
+    print("setImgBound...$viewBounds");
   }
 
   @override
@@ -105,8 +103,8 @@ class ImageController {
   void bindNodeImage(NodeImage nodeImage) {
     print("ImageController bindNodeImage...");
     bindImage = nodeImage;
-    updateBind();
     isBindView = true;
+    updateBind();
   }
 
   ///更新绑定信息

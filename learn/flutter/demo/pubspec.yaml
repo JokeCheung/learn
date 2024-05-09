@@ -28,5 +28,6 @@ flutter:
   uses-material-design: true
   assets:
     - lib/image_scale/assets/image_scale.png
+    - lib/slide_change_size/assets/image_scale.png
 
 
