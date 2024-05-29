@@ -7,11 +7,11 @@ import org.example.service.UserService;
 import org.example.utils.JwtUtil;
 import org.example.utils.Md5Util;
 import org.example.utils.ThreadLocalUtil;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,6 +70,48 @@ public class UserController {
         User user = userService.findByUsername(username);
         return Result.success(user);
     }
+
+    @PutMapping("/update")
+    public Result update(@RequestBody @Validated User user) {
+        userService.update(user);
+        return Result.success();
+    }
+
+    @PatchMapping("updateAvatar")
+    public Result updateAvatar(@RequestParam @URL String avatarUrl) {
+        userService.updateAvatar(avatarUrl);
+        return Result.success();
+    }
+
+    @PatchMapping("/updatePwd")
+    public Result updatePwd(@RequestBody Map<String, String> params) {
+        //1.校验参数
+        String oldPwd = params.get("old_pwd");
+        String newPwd = params.get("new_pwd");
+        String rePwd = params.get("re_pwd");
+        if (!StringUtils.hasLength(oldPwd) ||
+                !StringUtils.hasLength(newPwd) ||
+                !StringUtils.hasLength(rePwd)) {
+            return Result.error("Missing necessary parameters");
+        }
+
+        //2.比对新密码和确认密码是否一样
+        if (!rePwd.equals(newPwd)) {
+            return Result.error("The passwords filled in twice are inconsistent");
+        }
+
+        //3.对比原密码是否输入正确
+        Map<String, Object> map = ThreadLocalUtil.get();
+        String username = map.get("username").toString();
+        User user = userService.findByUsername(username);
+        if (!user.getPassword().equals(Md5Util.getMD5String(oldPwd))) {
+            return Result.error("The original password is incorrect");
+        }
+
+        userService.updatePwd(newPwd);
+        return Result.success();
+    }
+
 }
 
 

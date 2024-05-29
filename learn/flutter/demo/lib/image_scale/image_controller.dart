@@ -7,54 +7,20 @@ import 'package:flutter/material.dart';
 import 'node_image.dart';
 
 class MyImageController extends ImageController with ChangeNotifier {
-
-  Rect? viewBounds;
-  MyImageController({this.viewBounds});
-
-  //更新绑定信息
-  // @override
-  // void updateBind() {
-  //   print("MyImageController updateBind...");
-  //   if (viewBounds == null){
-  //     print("end1");
-  //     return;
-  //   }
-  //   final image = bindImage;
-  //   if (image == null){
-  //     print("end2");
-  //     return clearBind();
-  //   }
-  //   int width = image.widthNotNull;
-  //   int height = image.heightNotNull;
-  //   if (width <= 0 || height <= 0) {
-  //     print("end3");
-  //     return clearBind();
-  //   }
-  //   setRatio(width, height);
-  //   //bounds用于四个控制点的击中测试 && 选中框的绘制
-  //   bounds.setLTWH(viewBounds!.left, viewBounds!.top, viewBounds!.width, viewBounds!.height);
-  //   print("MyImageController updateBind bounds=$bounds");
-  //   updateCtrlBounds();
-  // }
-
-  setImgBound(Rect? vb) {
-    viewBounds=vb;
-    print("setImgBound...$viewBounds");
-  }
-
   @override
   set bindImage(NodeImage? bindImage) {
     super.bindImage = bindImage;
     notifyListeners();
   }
 
-  //清除绑定信息
   @override
-  void clearBind() {
-    isBindView = false;
-    bindImage = null;
-    // bindNodeModel = null;
-    bounds.reset();
+  void updateBind() {
+    super.updateBind();
+    notifyListeners();
+  }
+
+  update(double x, double y){
+    super.updatePoint(x, y);
     notifyListeners();
   }
 }
@@ -67,6 +33,8 @@ class ImageController {
   final bounds = MutableRect.zero();
   double _aspectRatio = 0.0;
   double _k = 0;
+
+  // GlobalKey? imageBoxKey;
 
   final List<MutableRect> ctrlBounds = [
     MutableRect.zero(),
@@ -103,6 +71,7 @@ class ImageController {
   void bindNodeImage(NodeImage nodeImage) {
     print("ImageController bindNodeImage...");
     bindImage = nodeImage;
+    // imageBoxKey = boxKey;
     isBindView = true;
     updateBind();
   }
@@ -174,6 +143,7 @@ class ImageController {
   void clearBind() {
     isBindView = false;
     bindImage = null;
+    // imageBoxKey=null;
     // bindNodeModel = null;
     bounds.reset();
 

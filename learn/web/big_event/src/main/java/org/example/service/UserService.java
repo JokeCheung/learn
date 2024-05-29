@@ -8,4 +8,12 @@ public interface UserService {
 
     //注册
     void register(String username, String psw);
+
+    //更新
+    void update(User user);
+
+    //更新头像链接
+    void updateAvatar(String avatarUrl);
+
+    void updatePwd(String newPwd);
 }

@@ -87,16 +87,19 @@ class ItemState extends State<Item> {
         }
         setState(() {});
       },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ImageView(
-            width: imgWidth,
-          ),
-          ImageView(
-            width: imgWidth,
-          ),
-        ],
+      child: Container(
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ImageView(
+              width: imgWidth,
+            ),
+            ImageView(
+              width: imgWidth,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -156,7 +159,7 @@ class ImageViewState extends State<ImageView> {
       listenable: imageController,
       builder: (BuildContext context, Widget? child) {
         return Container(
-          color: Colors.green.withAlpha(80),
+          color: Colors.yellow,
           width: widget.width,
           height: widget.width,
           child: Stack(
@@ -166,15 +169,17 @@ class ImageViewState extends State<ImageView> {
                 padding: const EdgeInsets.all(10.0),
                 child: GestureDetector(
                   onTap: () {
-                    clickImg(
-                      context,
-                      nodeImage,
-                    );
+                    clickImg(context, nodeImage,);
                   },
+
+                  onSecondaryTap: (){
+                    clickImg(context, nodeImage,);
+                    print("onSecondaryTap...");
+                  },
+
                   child: Container(
                     color: Colors.blue,
                     child: Image(
-
                       key: GlobalObjectKey(nodeImage),
                       image: AssetImage(nodeImage.src),
                     ),
@@ -196,22 +201,24 @@ class ImageViewState extends State<ImageView> {
     BuildContext context,
     NodeImage image,
   ) {
-    print("onTap");
-    RenderBox? imgBox = GlobalObjectKey(nodeImage)
-        .currentContext
-        ?.findRenderObject() as RenderBox?;
-    if (imgBox == null || !imgBox.hasSize) {
-      print("clickImg return");
-      return;
+    var selectImg=TestWidget.of(context).selectImg;
+    if( selectImg != nodeImage){
+      RenderBox? imgBox = GlobalObjectKey(nodeImage)
+          .currentContext
+          ?.findRenderObject() as RenderBox?;
+      if (imgBox == null || !imgBox.hasSize) {
+        print("clickImg return");
+        return;
+      }
+      double left = 10;
+      double top = 10;
+      double width = imgBox.size.width;
+      double height = imgBox.size.height;
+      MutableRect mutableRect = MutableRect.fromLTWH(left, top, width, height);
+      image.imagesBounds.addEntries([MapEntry(image.src, mutableRect)]);
+      imageController.bindNodeImage(image);
+      TestWidget.of(context).selectImg = nodeImage;
+      print("image 地址=${image.hashCode}");
     }
-    double left = 10;
-    double top = 10;
-    double width = imgBox.size.width;
-    double height = imgBox.size.height;
-    MutableRect mutableRect = MutableRect.fromLTWH(left, top, width, height);
-    image.imagesBounds.addEntries([MapEntry(image.src, mutableRect)]);
-    imageController.bindNodeImage(image);
-    TestWidget.of(context).selectImg = nodeImage;
-    print("image 地址=${image.hashCode}");
   }
 }

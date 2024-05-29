@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'image_controller.dart';
 import 'node_image.dart';
 
-
 /* 图片边框绘制组件*/
 
 class ImageControllerWidget extends StatefulWidget {
@@ -29,41 +28,6 @@ class ImageControllerWidgetState extends State<ImageControllerWidget> {
   Offset? downEventRecord;
   GlobalKey rootKey = GlobalKey();
 
-  // Rect get imagesUpperLayer {
-  //   if (widget.imgSelectLocator.imgGroupRect != null) {
-  //     return widget.imgSelectLocator.imgGroupRect!;
-  //   }
-  //   return Rect.zero;
-  // }
-
-  // double? get left{
-  //   switch(widget.index){
-  //     case 0:
-  //       return imagesUpperLayer.left;
-  //     case 1:
-  //       return imagesUpperLayer.right-20;
-  //     case 2:
-  //       return imagesUpperLayer.right-20;
-  //     case 3:
-  //       return imagesUpperLayer.left;
-  //   }
-  //   return null;
-  // }
-  //
-  // double? get top{
-  //   switch(widget.index){
-  //     case 0:
-  //       return imagesUpperLayer.top;
-  //     case 1:
-  //       return imagesUpperLayer.top;
-  //     case 2:
-  //       return imagesUpperLayer.bottom-20;
-  //     case 3:
-  //       return imagesUpperLayer.bottom-20;
-  //   }
-  //   return null;
-  // }
-
   MyImageController get imageController => widget.imageController;
 
   @override
@@ -85,7 +49,6 @@ class ImageControllerWidgetState extends State<ImageControllerWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     // print("ImageControllerWidget build");
 
     return Listener(
@@ -95,59 +58,54 @@ class ImageControllerWidgetState extends State<ImageControllerWidget> {
       },
       child: SizedBox(
         key: rootKey,
-        child: CustomPaint(
-          painter: SelectBoxPainter(
-            imageController,
-          ),
-          child: const Stack(
-            fit: StackFit.expand,
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: ColoredBox(
-                    color: Colors.red,
-                    child: GestureWidget(),
-                  ),
+        child: const Stack(
+          fit: StackFit.expand,
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: ColoredBox(
+                  color: Colors.red,
+                  child: GestureWidget(),
                 ),
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: ColoredBox(
-                    color: Colors.yellow,
-                    child: GestureWidget(),
-                  ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: ColoredBox(
+                  color: Colors.yellow,
+                  child: GestureWidget(),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: ColoredBox(
-                    color: Colors.green,
-                    child: GestureWidget(),
-                  ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: ColoredBox(
+                  color: Colors.green,
+                  child: GestureWidget(),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: ColoredBox(
-                    color: Colors.purple,
-                    child: GestureWidget(),
-                  ),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: ColoredBox(
+                  color: Colors.purple,
+                  child: GestureWidget(),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -180,24 +138,23 @@ class ImageControllerWidgetState extends State<ImageControllerWidget> {
 }
 
 class GestureWidget extends StatefulWidget {
-
-  const GestureWidget({Key? key}) : super(key: key);
+  const GestureWidget({super.key});
 
   @override
   State<GestureWidget> createState() => _GestureWidgetState();
 }
 
 class _GestureWidgetState extends State<GestureWidget> {
+  ImageControllerWidgetState get parentState =>
+      ImageControllerWidget.of(context);
 
-  ImageControllerWidgetState get parentState=>ImageControllerWidget.of(context);
-
-  MyImageController get imageController=>parentState.imageController;
+  MyImageController get imageController => parentState.imageController;
 
   @override
   Widget build(BuildContext context) {
-
-
     return GestureDetector(
+
+
       onScaleStart: (details) {
         print("ImageControllerWidget onScaleStart");
         parentState.imageController.checkClickAndSet(
@@ -206,10 +163,6 @@ class _GestureWidgetState extends State<GestureWidget> {
 
       onScaleUpdate: (details) {
         print("ImageControllerWidget onScaleUpdate");
-
-        // rootState.scalingImg = true;
-        // NodeListViewState rootState=NodeListViewState.of(context)!;
-        // print("rootState=${rootState.scalingImg}");
         //只有判断出拖拽点之后才允许出现拖拽框
         if (imageController.clickCtrl != null) {
           print("widget.imageController.clickCtrl != null");
@@ -220,8 +173,7 @@ class _GestureWidgetState extends State<GestureWidget> {
               ?.findRenderObject() as RenderBox;
           RenderBox box = context.findRenderObject() as RenderBox;
           Offset posInRoot = box.localToGlobal(posInSelf, ancestor: parentBox);
-          imageController.updatePoint(posInRoot.dx, posInRoot.dy);
-          parentState.setState(() {});
+          imageController.update(posInRoot.dx, posInRoot.dy);
           return;
         } else {
           print("widget.imageController.clickCtrl == null");
