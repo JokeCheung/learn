@@ -8,6 +8,10 @@ enum DividerMainChild {
 }
 
 class DividerResizeLineHorizontal extends StatefulWidget {
+
+  static Color dividerNormal = Colors.grey;
+  static Color dividerHover = Colors.blue;
+
   const DividerResizeLineHorizontal({
     super.key,
     required this.controller,
@@ -26,24 +30,30 @@ class DividerResizeLineHorizontal extends StatefulWidget {
   final Widget leftChild;
   final Widget rightChild;
   final void Function(double width)? onDragEnd;
+
   static const dragLineHitWidth = 6.0;
 
   @override
-  State<DividerResizeLineHorizontal> createState() => _DividerResizeLineHorizontalState();
+  State<DividerResizeLineHorizontal> createState() => DividerResizeLineHorizontalState();
 }
 
-class _DividerResizeLineHorizontalState extends State<DividerResizeLineHorizontal> {
+class DividerResizeLineHorizontalState extends State<DividerResizeLineHorizontal> {
+
+
 
   Widget _buildHitLine() {
     return SizedBox(
       width: DividerResizeLineHorizontal.dragLineHitWidth,
       height: double.infinity,
-      child: _HitLine(
-        mainChild:widget.mainChild,
-        controller: widget.controller,
-        maxWidth: widget.maxWidth,
-        minWidth: widget.minWidth,
-        onDragEnd: widget.onDragEnd,
+      child: Container(
+        color: Colors.cyan,
+        child: _HitLine(
+          mainChild:widget.mainChild,
+          controller: widget.controller,
+          maxWidth: widget.maxWidth,
+          minWidth: widget.minWidth,
+          onDragEnd: widget.onDragEnd,
+        ),
       ),
     );
   }
@@ -52,8 +62,11 @@ class _DividerResizeLineHorizontalState extends State<DividerResizeLineHorizonta
     return ValueListenableBuilder(
       valueListenable: widget.controller,
       builder: (context, value, child) {
+        double width=max(0.0, value);
+        print("width=$width");
+        print("value=$value");
         return SizedBox(
-          width: max(0.0, value - DividerResizeLineHorizontal.dragLineHitWidth / 2.0),
+          width: width,
           height: double.infinity,
         );
       },
@@ -90,7 +103,7 @@ class _DividerResizeLineHorizontalState extends State<DividerResizeLineHorizonta
         Row(
           children: [
             left,
-            const SizedBox(width: 2), // 空出Divider的位置
+            const SizedBox(width: DividerResizeLineHorizontal.dragLineHitWidth), // 空出Divider的位置
             right,
           ],
         ),
@@ -101,17 +114,17 @@ class _DividerResizeLineHorizontalState extends State<DividerResizeLineHorizonta
         Align(
           alignment: Alignment.bottomRight,
           child: MaterialButton(
-          onPressed: (){
-            print("MaterialButton onPressed");
-            if(widget.controller.value==0){
-              widget.controller.value=500;
-            }else{
-              widget.controller.value=0;
-            }
-          },
-          child: const Text(
-            "点击按钮",
-          )
+              onPressed: (){
+                print("MaterialButton onPressed");
+                if(widget.controller.value==0){
+                  widget.controller.value=500;
+                }else{
+                  widget.controller.value=0;
+                }
+              },
+              child: const Text(
+                "点击按钮",
+              )
           ),
         ),
       ],
@@ -128,7 +141,7 @@ class _MainChild extends StatelessWidget {
 
   final ValueNotifier<double> controller;
   final Widget child;
-  
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -265,20 +278,42 @@ class _HitLineState extends State<_HitLine> with SingleTickerProviderStateMixin 
           child: AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
-              // final uiColor = UiColor.of(context);
-              // final compositeColor = ColorUtils.compositeColors(
-              //   uiColor.colorAccent.withOpacity(_controller.value).value,
-              //   uiColor.divider.value,
-              // );
+              // final uiColor = Colors.blueAccent;
+              final compositeColor = ColorUtils.compositeColors(
+                DividerResizeLineHorizontal.dividerHover.withOpacity(_controller.value).value,
+                DividerResizeLineHorizontal.dividerNormal.value,
+              );
               return Container(
-                width: 2,
-                color: Colors.black,
+                color:  Color(compositeColor),
               );
             },
           ),
         ),
       ),
     );
+  }
+}
+
+class  ColorUtils{
+  static int compositeColors(int foreground, int background) {
+    int bgAlpha = Color(background).alpha;
+    int fgAlpha = Color(foreground).alpha;
+    int a = compositeAlpha(fgAlpha, bgAlpha);
+
+    int r = compositeComponent(Color(foreground).red, fgAlpha, Color(background).red, bgAlpha, a);
+    int g = compositeComponent(Color(foreground).green, fgAlpha, Color(background).green, bgAlpha, a);
+    int b = compositeComponent(Color(foreground).blue, fgAlpha, Color(background).blue, bgAlpha, a);
+
+    return (a << 24) | (r << 16) | (g << 8) | b;
+  }
+
+  static int compositeAlpha(int foregroundAlpha, int backgroundAlpha) {
+    return 0xFF - (((0xFF - backgroundAlpha) * (0xFF - foregroundAlpha)) ~/ 0xFF);
+  }
+
+  static int compositeComponent(int fgC, int fgA, int bgC, int bgA, int a) {
+    if (a == 0) return 0;
+    return ((0xFF * fgC * fgA) + (bgC * bgA * (0xFF - fgA))) ~/ (a * 0xFF);
   }
 }
 

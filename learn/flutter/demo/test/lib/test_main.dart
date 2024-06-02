@@ -28,13 +28,44 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  final FocusNode focusNode=FocusNode();
+  final TextEditingController controller=TextEditingController();
+ bool enable=true;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      print("addListener");
+     // focusNode.unfocus();
+     //  if(controller.text.isNotEmpty){
+     //    enable=false;
+     //    setState(() {});
+     //  }
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          enable=false;
+          setState(() {});
+        },
       ),
-      body: Container(),
+      body: Center(
+        child: Container(
+          width: 500,
+          color: Colors.lightGreenAccent,
+          child: TextField(
+            focusNode: focusNode,
+            controller: controller,
+            enabled: enable,
+          ),
+        ),
+      ),
     );
   }
 }

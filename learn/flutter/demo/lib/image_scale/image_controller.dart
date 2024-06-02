@@ -1,58 +1,26 @@
+import 'dart:async';
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+import 'node_image.dart';
+
 class MyImageController extends ImageController with ChangeNotifier {
-
-  Rect? viewBounds;
-  MyImageController({this.viewBounds});
-
-  //更新绑定信息
-  @override
-  void updateBind() {
-    print("MyImageController updateBind...");
-    if (viewBounds == null){
-      print("end1");
-      return;
-    }
-    final image = bindImage;
-    if (image == null){
-      print("end2");
-      return clearBind();
-    }
-    int width = image.widthNotNull;
-    int height = image.heightNotNull;
-    if (width <= 0 || height <= 0) {
-      print("end3");
-      return clearBind();
-    }
-    setRatio(width, height);
-    // viewInList.setLTRB(_locationBounds!.left, _locationBounds!.top,
-    //     _locationBounds!.right, _locationBounds!.bottom);
-    //bounds用于四个控制点的击中测试 && 选中框的绘制
-    bounds.setLTRB(viewBounds!.left, viewBounds!.top, viewBounds!.width, viewBounds!.height);
-    print("MyImageController updateBind bounds=$bounds");
-    updateCtrlBounds();
-  }
-
-  setImgBound(Rect? vb) {
-    print("setImgBound......");
-    viewBounds=vb;
-  }
-
   @override
   set bindImage(NodeImage? bindImage) {
     super.bindImage = bindImage;
     notifyListeners();
   }
 
-  //清除绑定信息
   @override
-  void clearBind() {
-    isBindView = false;
-    bindImage = null;
-    // bindNodeModel = null;
-    bounds.reset();
+  void updateBind() {
+    super.updateBind();
+    notifyListeners();
+  }
+
+  update(double x, double y){
+    super.updatePoint(x, y);
     notifyListeners();
   }
 }
@@ -65,6 +33,8 @@ class ImageController {
   final bounds = MutableRect.zero();
   double _aspectRatio = 0.0;
   double _k = 0;
+
+  // GlobalKey? imageBoxKey;
 
   final List<MutableRect> ctrlBounds = [
     MutableRect.zero(),
@@ -88,6 +58,10 @@ class ImageController {
     ..isAntiAlias = true
     ..strokeWidth = 1
     ..color = const Color(0xff0168FD);
+  final _paintCtrlRect = Paint()
+    ..isAntiAlias = true
+    ..strokeWidth = 1
+    ..color = Colors.cyanAccent.withAlpha(150);
 
   // BaseNodeModel? bindNodeModel;
   NodeImage? bindImage;
@@ -97,8 +71,9 @@ class ImageController {
   void bindNodeImage(NodeImage nodeImage) {
     print("ImageController bindNodeImage...");
     bindImage = nodeImage;
-    updateBind();
+    // imageBoxKey = boxKey;
     isBindView = true;
+    updateBind();
   }
 
   ///更新绑定信息
@@ -135,7 +110,7 @@ class ImageController {
     final left = bounds.left;
     final top = bounds.top;
     final right = bounds.right;
-    final bottom = bounds.bottom;
+    final bottom =bounds.bottom;
     ctrlBounds[0].setLTRB(
       left - handleSize,
       top - handleSize,
@@ -168,6 +143,7 @@ class ImageController {
   void clearBind() {
     isBindView = false;
     bindImage = null;
+    // imageBoxKey=null;
     // bindNodeModel = null;
     bounds.reset();
 
@@ -186,13 +162,20 @@ class ImageController {
       _paint.color = boundsColor;
     }
     for (var ctrl in ctrlBounds) {
-      print("画四个点");
+      // print("画四个点");
       canvas.drawOval(Rect.fromLTRB(
         ctrl.left + showHandleClip,
         ctrl.top + showHandleClip,
         ctrl.right - showHandleClip,
         ctrl.bottom - showHandleClip,
       ), _paint);
+
+      canvas.drawRect(Rect.fromLTRB(
+        ctrl.left + showHandleClip,
+        ctrl.top + showHandleClip,
+        ctrl.right - showHandleClip,
+        ctrl.bottom - showHandleClip,
+      ),_paintCtrlRect);
     }
     print("ImageController draw...");
   }
@@ -316,69 +299,6 @@ class ImageController {
   }
 }
 
-class NodeImage {
-  static const imageDefaultSize = 230;
-  static const minSize = 16;
-
-  Map<String, MutableRect> imagesBounds = {};
-
-  String src;
-  int? width;
-  int? height;
-  int srcWidth=1440;
-  int srcHeight=1080;
-
-  int get widthNotNull => width ?? srcWidth;
-  int get heightNotNull => height ?? srcHeight;
-
-  NodeImage(
-      this.src, {
-        required this.width,
-        required this.height,
-      });
-
-  static Point<int> formatSize(int srcWidth, int srcHeight) {
-    final ratio = srcWidth / srcHeight;
-    int width = srcWidth;
-    int height = srcHeight;
-    if (srcWidth > NodeImage.imageDefaultSize) {
-      width = NodeImage.imageDefaultSize;
-      height = width ~/ ratio;
-    }
-    if (srcHeight > NodeImage.imageDefaultSize) {
-      height = NodeImage.imageDefaultSize;
-      width = (height * ratio).toInt();
-    }
-    return Point(width, height);
-  }
-
-  static NodeImage buildFromSrc(String src, int srcWidth, int srcHeight) {
-    final newSize = formatSize(srcWidth, srcHeight);
-    return NodeImage(src, width: newSize.x, height: newSize.y);
-  }
-
-  NodeImage copy() {
-    return NodeImage(
-      src,
-      width: width,
-      height: height,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is NodeImage
-        && runtimeType == other.runtimeType
-        && src == other.src
-        && width == other.width
-        && height == other.height;
-    // return super == other;
-  }
-
-  @override
-  int get hashCode => Object.hash(src, width, height);
-
-}
 
 class MutableRect {
 
@@ -455,22 +375,4 @@ class MutableRect {
     return "left:$left top:$top right:$right bottom:$bottom}";
   }
 }
-
-//悬浮绘制层的位置
-class ImgSelectLocator with ChangeNotifier {
-
-  Rect _imgRect=Rect.zero;
-
-  set imgRect(Rect? r) {
-    if(r==null){
-      return;
-    }
-    _imgRect=r;
-    notifyListeners();
-  }
-
-  Rect get imgRect=>_imgRect;
-
-}
-
 

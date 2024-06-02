@@ -1,10 +1,11 @@
+import 'package:demo/pop_menu_button/editor_mouse_popup_overlay.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 import 'divider_resize_line.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -31,73 +32,115 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   final detailWidthNotifier = ValueNotifier<double>(0);
+  final layoutKey = GlobalKey();
+
   // final ValueNotifier<double> controller;
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      body:DividerResizeLineHorizontal(
+    return Scaffold(
+      body: DividerResizeLineHorizontal(
         mainChild: DividerMainChild.right,
         controller: detailWidthNotifier,
         minWidth: 200,
         maxWidth: 1000,
         onDragEnd: (width) async {
-          // _detailExpandedWidth = width;
-          // await MinderEditorSpec.pref
-          //     .setDouble(_prefKey, width);
+          print("结束拖拽!");
         },
         leftChild: Container(
           color: Colors.yellow,
           child: const Center(child: Text("left")),
         ),
-        rightChild:  Container(
-            color: Colors.blue,
-          child: const Center(child: Text("right")),
+        // rightChild: LayoutBuilder(
+        //   key: layoutKey,
+        //     builder: (context,c){
+        //       return RightChild(layoutKey: layoutKey,);
+        //     },
+        //    ),
+        rightChild: NotificationListener(
+          onNotification: (n){
+            print("n is ${n.runtimeType}");
+            return false;
+          },
+          child: RightChild(
+            layoutKey: layoutKey,
+          ),
         ),
       ),
-
     );
   }
 }
 
+class RightChild extends StatefulWidget {
+  final GlobalKey layoutKey;
 
-
-
-class ColorBlock extends StatefulWidget {
-  final Color color;
-  const ColorBlock({super.key, required this.color});
+  const RightChild({super.key, required this.layoutKey});
 
   @override
-  State<ColorBlock> createState() => _ColorBlockState();
+  State<RightChild> createState() => _RightChildState();
 }
 
-class _ColorBlockState extends State<ColorBlock> {
-  bool hover=false;
+class _RightChildState extends State<RightChild> {
+  static const String imgPath = 'lib/slide_change_size/assets/image_scale.png';
+  double width = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: MouseRegion(
-        onEnter: (PointerEnterEvent event){
-          print("onEnter");
-          setState(() {
-            hover=true;
-          });
-        },
-        onExit: (PointerExitEvent event){
-          print("onExit");
-          setState(() {
-            hover=false;
-          });
-        },
-        child: Container(
-          color: hover?Colors.green:widget.color,
+    print("RightChild build");
+
+    return /* SizeChangedLayoutNotifier(*/
+        // child: LayoutBuilder(
+        //   builder: (context,constraints){
+        //     print("Size change maxWidth=${constraints.maxWidth}");
+        //     return  Container(
+        //       color: Colors.pink,
+        //       child: Center(
+        //         child: Image.asset(
+        //           imgPath,
+        //           width: constraints.maxWidth/2,
+        //           height: constraints.maxWidth/2,
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // ),
+        //  MeasuredSizeWidget(
+        //  onChange: (size){
+        //   print("onChange $size");
+        //   width=size.width/2;
+        //   setState(() {});
+        // },
+        //   child: Container(
+        //     color: Colors.pink,
+        //     child: Center(
+        //       child: Image.asset(
+        //         imgPath,
+        //         width: width,
+        //         height: width,
+        //       ),
+        //     ),
+        //   ),
+        // );
+        SizeChangedLayoutNotifier(
+      child: Container(
+        color: Colors.pink,
+        child: Center(
+          child: Image.asset(
+            imgPath,
+            width: width,
+            height: width,
+          ),
         ),
       ),
     );
   }
+
+  double getWidth() {
+    // RenderBox? box=widget.layoutKey.currentContext?.findRenderObject() as RenderBox?;
+    // if(box!=null && box.hasSize){
+    //   return box.size.width/2;
+    // }
+    return 0;
+  }
 }
-
-
