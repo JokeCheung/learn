@@ -1,3 +1,6 @@
+】文章自定义参数校验：自定义注解State，自定义Validation继承ConstraintValidator；
+】文章分类查询：@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")在实体类中指定时间格式；
+】新增文章分类：createTime、createId这类字段需要在Service层自动填充到Category中；
 】修改用户密码：注意使用md5工具类存取密码，使用@PatchMapping注解声明请求方式更新实体类部分字段，@RequestBody解析请求体生成map；
 】修改用户头像链接：请求参数校验@URL标注合法格式，获取ThreadLocal用户id信息；
 】实体参数校验：实体类成员变量添加注解，接口方法的实体参数添加@Valicated注解；
