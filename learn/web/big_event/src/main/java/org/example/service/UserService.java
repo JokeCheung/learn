@@ -2,6 +2,8 @@ package org.example.service;
 
 import org.example.pojo.User;
 
+import java.util.List;
+
 public interface UserService {
     //根据用户名查找用户
     User findByUsername(String username);
@@ -15,5 +17,9 @@ public interface UserService {
     //更新头像链接
     void updateAvatar(String avatarUrl);
 
+    //更新密码
     void updatePwd(String newPwd);
+
+    //返回所有用户信息
+    List<User> findAllUseInfo();
 }

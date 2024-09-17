@@ -6,12 +6,13 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.example.pojo.User;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
     //根据用户名查询用户
     @Select("select * from user where username=#{userName}")
     User findByUsername(String userName);
-
 
     //添加
     @Insert("insert into user(username,password,create_time,update_time)" +
@@ -27,6 +28,10 @@ public interface UserMapper {
 
     @Update("update user set password=#{newPwd},update_time=now() where id=#{id}")
     void updatePwd(String newPwd, Integer id);
+
+    //返回所有用户消息
+    @Select("select * from user")
+    List<User> findAllUserInfo();
 }
 
 

@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -71,6 +72,7 @@ public class UserController {
         return Result.success(user);
     }
 
+
     @PutMapping("/update")
     public Result update(@RequestBody @Validated User user) {
         userService.update(user);
@@ -110,6 +112,22 @@ public class UserController {
 
         userService.updatePwd(newPwd);
         return Result.success();
+    }
+
+    /**
+     * 返回所有用户Json数据接口
+     */
+
+    @RequestMapping("/allUserInfo")
+    public Result<List<User>> findAllUserInfo(/*@RequestHeader(name = "Authorization") String token*/) {
+        //根据token的用户名查询所有用户
+//        Map<String, Object> map = JwtUtil.parseToken(token);
+//        String username = map.get("username").toString();
+//        System.out.println("用户：" + username + "查看了所有用户信息");
+
+        System.out.println("findAllUserInfo调用！！！！！！！！！！！");
+        List<User> users = userService.findAllUseInfo();
+        return Result.success(users);
     }
 
 }
