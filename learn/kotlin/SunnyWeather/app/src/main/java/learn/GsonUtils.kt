@@ -3,7 +3,7 @@ package learn
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import learn.entity.MyResponse
+import learn.entity.MyResponseUser
 
 object GsonUtils {
 
@@ -12,8 +12,8 @@ object GsonUtils {
     fun parseResponse(jsonData: String) {
         Log.e(TAG, "parseJSON")
         val gson = Gson()
-        val typeOf = object : TypeToken<MyResponse>() {}.type
-        val myResponse = gson.fromJson<MyResponse>(jsonData, typeOf)
+        val typeOf = object : TypeToken<MyResponseUser>() {}.type
+        val myResponse = gson.fromJson<MyResponseUser>(jsonData, typeOf)
         myResponse.data.forEach { user ->
             Log.d(TAG, "-----------------------")
             Log.d(TAG, "user.id=" + user.id)

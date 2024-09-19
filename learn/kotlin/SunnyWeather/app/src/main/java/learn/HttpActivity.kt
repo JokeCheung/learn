@@ -8,20 +8,27 @@ import com.example.sunnyweather.activity.FROM_OKHTTP
 import com.example.sunnyweather.activity.FROM_RETROFIT
 import com.example.sunnyweather.activity.FROM_RETROFIT_DESERIALIZE
 import com.example.sunnyweather.databinding.ActivityHttpBinding
-import learn.entity.MyResponse
+import com.example.sunnyweather.logic.model.Place
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import learn.entity.MyResponsePlace
+import learn.entity.MyResponseUser
 import learn.retrofit.ResponseService
+import learn.retrofit.TimeoutInterceptor
 import okhttp3.Call
-
+import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
-import okhttp3.Response as Okhttp3Response
 import retrofit2.Callback
-import retrofit2.Response as Retrofit2Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import kotlin.concurrent.thread
+import okhttp3.Response as Okhttp3Response
+import retrofit2.Response as Retrofit2Response
 
-const val address = "http://192.168.31.180:8080/user/allUserInfo"
+
+const val user = "http://192.168.31.180:8080/user/allUserInfo"
+const val place = "http://192.168.31.180:8080/place/all"
 const val addressHead = "http://192.168.31.180:8080"
 const val addressTail = "/user/allUserInfo"
 
@@ -43,35 +50,83 @@ class HttpActivity : AppCompatActivity() {
             FROM_HTTP -> startHttpURLConnection()
             FROM_OKHTTP -> startOKHttp()
             FROM_RETROFIT -> startRetrofit()
-            FROM_RETROFIT_DESERIALIZE->startRetrofitDeserialize()
+//            FROM_RETROFIT_DESERIALIZE->startRetrofitDeserializeUser()
+            FROM_RETROFIT_DESERIALIZE -> startRetrofitDeserializePlace()
         }
 
     }
+
     /**
      * Retrofit kotlin实现接口回调：内部实现了子线程，对响应体反序列化成指定JSON Model
      */
-    private fun startRetrofitDeserialize(){
-        binding.accessTypeTv.text = "Retrofit Deserialize";
+    private fun startRetrofitDeserializePlace() {
+        binding.accessTypeTv.text = "Retrofit Deserialize place"
+        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(TimeoutInterceptor())
+            .build()
+
+
         val retrofit = Retrofit.Builder()
             .baseUrl(addressHead)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val responseService = retrofit.create(ResponseService::class.java)
-        responseService.getResponseData().enqueue(object : Callback<MyResponse> {
+        responseService.getPlaceData().enqueue(object : Callback<MyResponsePlace> {
             override fun onResponse(
-                call: retrofit2.Call<MyResponse>,
-                retrofit2Response: Retrofit2Response<MyResponse>
+                call: retrofit2.Call<MyResponsePlace>,
+                retrofit2Response: Retrofit2Response<MyResponsePlace>
             ) {
-                val response=retrofit2Response.body()
-                val string=StringBuilder()
-                response?.data?.forEach { user ->
-                    string.append(user.toString()+"\n")
+                Log.e("HttpActivity", "Retrofit请求成功")
+                val response = retrofit2Response.body()
+                val string = StringBuilder()
+
+                response?.data?.forEach { place ->
+                    string.append("${place}\n")
                 }
                 showResponse(string.toString())
             }
 
-            override fun onFailure(call: retrofit2.Call<MyResponse>, t: Throwable) {
-                showResponse(t.toString())
+            override fun onFailure(call: retrofit2.Call<MyResponsePlace>, t: Throwable) {
+                Log.e("HttpActivity", "Retrofit请求失败")
+                showResponse("Retrofit请求失败:" + t.toString())
+            }
+        })
+    }
+
+    /**
+     * Retrofit kotlin实现接口回调：内部实现了子线程，对响应体反序列化成指定JSON Model
+     */
+    private fun startRetrofitDeserializeUser() {
+        binding.accessTypeTv.text = "Retrofit Deserialize user"
+        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(TimeoutInterceptor())
+            .build()
+
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(addressHead)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val responseService = retrofit.create(ResponseService::class.java)
+        responseService.getUserData().enqueue(object : Callback<MyResponseUser> {
+            override fun onResponse(
+                call: retrofit2.Call<MyResponseUser>,
+                retrofit2Response: Retrofit2Response<MyResponseUser>
+            ) {
+                Log.e("HttpActivity", "Retrofit请求成功")
+                val response = retrofit2Response.body()
+                val string = StringBuilder()
+                response?.data?.forEach { user ->
+                    string.append(user.toString() + "\n")
+                }
+                showResponse(string.toString())
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyResponseUser>, t: Throwable) {
+                Log.e("HttpActivity", "Retrofit请求失败")
+                showResponse("Retrofit请求失败:" + t.toString())
             }
         })
     }
@@ -91,11 +146,11 @@ class HttpActivity : AppCompatActivity() {
                 call: retrofit2.Call<ResponseBody>,
                 retrofit2Response: Retrofit2Response<ResponseBody>
             ) {
-                if(retrofit2Response.isSuccessful){
+                if (retrofit2Response.isSuccessful) {
                     Log.e(GsonUtils.TAG, "----------Retrofit 响应返回原始json-------------")
                 }
                 val responseData = retrofit2Response.body()?.string()
-                showResponse(responseData?:"")
+                showResponse(responseData ?: "")
             }
 
             override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
@@ -104,12 +159,13 @@ class HttpActivity : AppCompatActivity() {
         }
         )
     }
+
     /**
      * Okhttp kotlin实现接口回调：Okhttp内部实现了子线程
      */
     private fun startOKHttp() {
         binding.accessTypeTv.text = "OKHttp";
-        HttpUtils.sendRequestOkhttp(address, object : okhttp3.Callback {
+        HttpUtils.sendRequestOkhttp(place, object : okhttp3.Callback {
 
             override fun onFailure(call: Call, e: IOException) {
                 showResponse(e.message.toString())
@@ -130,7 +186,7 @@ class HttpActivity : AppCompatActivity() {
     private fun startHttpURLConnection() {
         binding.accessTypeTv.text = "HttpURLConnection";
         thread {
-            HttpUtils.sendRequestHttpURLConnection(address, object : HttpCallbackListener {
+            HttpUtils.sendRequestHttpURLConnection(user, object : HttpCallbackListener {
                 override fun onFinish(response: String) {
                     showResponse(response)
                 }
