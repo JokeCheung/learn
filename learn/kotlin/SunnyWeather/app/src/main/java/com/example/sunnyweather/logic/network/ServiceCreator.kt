@@ -7,9 +7,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ServiceCreator {
 
     private const val BASE_URL = "https://api.caiyunapp.com/"
+    private const val BASE_URL_TEST = "http://192.168.31.180:8080"
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl(BASE_URL_TEST)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

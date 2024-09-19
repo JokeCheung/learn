@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -23,6 +24,15 @@ import com.example.sunnyweather.R
 import com.example.sunnyweather.databinding.FragmentPlaceBinding
 import com.example.sunnyweather.databinding.PlaceItemBinding
 import com.example.sunnyweather.logic.model.Place
+import learn.addressHead
+import learn.entity.MyResponsePlace
+import learn.retrofit.ResponseService
+import learn.retrofit.TimeoutInterceptor
+import okhttp3.OkHttpClient
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class PlaceFragment : Fragment() {
 
@@ -30,6 +40,7 @@ class PlaceFragment : Fragment() {
     lateinit var rv: RecyclerView
     lateinit var searchPlaceEdit: EditText
     lateinit var bgImageView: ImageView
+    lateinit var btn: Button
 
     val viewModel by lazy {
         ViewModelProviders.of(this).get(PlaceViewModel::class.java)
@@ -51,31 +62,55 @@ class PlaceFragment : Fragment() {
         rv = binding.recyclerView
         bgImageView = binding.bgImageView
         searchPlaceEdit = binding.searchPlaceEdit
+        btn=binding.refreshDataBtn
+        adapter = PlaceAdapter(this, viewModel.placeList)
+        val layoutManager = LinearLayoutManager(activity)
+        rv.layoutManager = layoutManager
+        rv.adapter = adapter
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val layoutManager = LinearLayoutManager(activity)
-        rv.layoutManager = layoutManager
-        adapter = PlaceAdapter(this, viewModel.placeList)
-        rv.adapter = adapter
+
+        btn.setOnClickListener({
+            Log.e("PlaceFragment","btn 点击")
+            viewModel.searchPlaces("")
+
+
+//            val content = editable.toString()
+//            if (content.isNotEmpty()) {
+//                viewModel.searchPlaces(content)
+//            } else {
+//                rv.visibility = View.GONE
+//                bgImageView.visibility = View.VISIBLE
+//                viewModel.placeList.clear()
+//                adapter.notifyDataSetChanged()
+//            }
+//            startRetrofitDeserializePlace()
+//            adapter.notifyDataSetChanged()
+//            viewModel.count++
+//            searchPlaceEdit.text=Editable.Factory.getInstance().newEditable(viewModel.count.toString())
+        })
+
+
+
+
         searchPlaceEdit.addTextChangedListener { editable ->
-            Log.e("PlaceFragment","onActivityCreated:addTextChangedListener")
-            val content = editable.toString()
-            if (content.isNotEmpty()) {
-                viewModel.searchPlaces(content)
-            } else {
-                rv.visibility = View.GONE
-                bgImageView.visibility = View.VISIBLE
-                viewModel.placeList.clear()
-                adapter.notifyDataSetChanged()
-            }
+//            Log.e("PlaceFragment","onActivityCreated:addTextChangedListener")
+//            val content = editable.toString()
+//            if (content.isNotEmpty()) {
+//                viewModel.searchPlaces(content)
+//            } else {
+//                rv.visibility = View.GONE
+//                bgImageView.visibility = View.VISIBLE
+//                viewModel.placeList.clear()
+//                adapter.notifyDataSetChanged()
+//            }
         }
 
 //        viewModel.initData()
-
-        viewModel.placeLiveData.observe(this, Observer { result ->
+        viewModel.placeLiveData.observe(this@PlaceFragment, Observer { result ->
             Log.e("PlaceFragment","viewModel:observe")
             val places = result.getOrNull()
             if (places != null) {
@@ -91,5 +126,51 @@ class PlaceFragment : Fragment() {
                 result.exceptionOrNull()?.printStackTrace()
             }
         })
+
     }
+
+    /**
+     * Retrofit kotlin实现接口回调：内部实现了子线程，对响应体反序列化成指定JSON Model
+     */
+    private fun startRetrofitDeserializePlace() {
+        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(TimeoutInterceptor())
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(addressHead)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val responseService = retrofit.create(ResponseService::class.java)
+        responseService.getPlaceData().enqueue(object : Callback<MyResponsePlace> {
+            override fun onResponse(
+                call: retrofit2.Call<MyResponsePlace>,
+                retrofit2Response: Response<MyResponsePlace>
+            ) {
+                Log.e("PlaceFragment", "Retrofit请求成功")
+                val response = retrofit2Response.body()
+                val string = StringBuilder()
+                val placeList=response?.data
+//                val placeNameList= ArrayList<String>()
+                if(placeList!=null){
+                    Log.e("PlaceFragment", "placeList.size=${placeList.size}")
+                    placeList.forEach { place ->
+                        string.append("${place}\n")
+//                        placeNameList.add(place.formatted_address)
+                    }
+//                    viewModel.searchPlaces("广州市")
+//                    Log.e("PlaceFragment", "viewModel.placeList.size=${viewModel.placeList.value!!.size}")
+                }
+//                Log.e("SunnyWeatherActivity",string.toString())
+
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyResponsePlace>, t: Throwable) {
+                Log.e("PlaceFragment", "Retrofit请求失败")
+            }
+        })
+    }
+
+
 }

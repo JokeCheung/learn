@@ -20,7 +20,7 @@
             android:name=".activity.SunnyWeatherActivity"
             android:exported="false"
             android:label="@string/title_activity_sunny_weather"
-            android:theme="@style/Theme.SunnyWeather" />
+            android:theme="@style/Theme.MaterialComponents" />
         <!-- android:networkSecurityConfig="@xml/network_security_config" -->
         <activity
             android:name=".activity.MainActivity"

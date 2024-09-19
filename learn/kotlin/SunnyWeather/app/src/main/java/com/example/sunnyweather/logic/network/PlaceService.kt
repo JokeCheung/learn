@@ -11,4 +11,7 @@ interface PlaceService {
 
     @GET("v2.6/${SunnyWeatherApplication.TOKEN}/weather.json?adcode=440106")
     fun searchPlaces(@Query("query") query:String): Call<PlaceResponse>
+
+    @GET("/place/all")
+    fun allPlace(): Call<PlaceResponse>
 }

@@ -1,16 +1,33 @@
 package com.example.sunnyweather.ui.place
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.sunnyweather.logic.Repository
 import com.example.sunnyweather.logic.model.Location
 import com.example.sunnyweather.logic.model.Place
 
 class PlaceViewModel : ViewModel() {
-    private val searchLiveData = MutableLiveData<String>()
     val placeList = ArrayList<Place>()
+    private val searchLiveData = MutableLiveData<String>()
+
     val placeLiveData = Transformations.switchMap(searchLiveData) { query ->
         Repository.searchPlace(query)
     }
+
+//    val placeNameData = Transformations.switchMap(placeList) {
+//        val names= ArrayList<String>()
+//        placeList.value!!.forEach { place ->
+//            names.add("${place.adcode},${place.formatted_address}")
+//        }
+//        return MutableLiveData<names>()
+//    }
+
+//    fun allPlace(): LiveData<Result<List<Place>>> {
+//        val data=Repository.allPlace()
+////        Log.d("PlaceFragment","data=${data.value.}")
+//        return data
+//    }
+////
 
     fun searchPlaces(query: String) {
         searchLiveData.value = query

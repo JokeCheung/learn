@@ -1,5 +1,6 @@
 package com.example.sunnyweather.logic.network
 
+import com.example.sunnyweather.logic.model.Place
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,7 +14,9 @@ object SunnyWeatherNetwork {
     private val placeService = ServiceCreator.create(PlaceService::class.java);
 
     //searchPlaces获得一个Call对象
-    suspend fun searchPlaces(query: String) = placeService.searchPlaces(query).await()
+    suspend fun searchPlaces(query: String) = placeService.allPlace().await()
+    //searchPlaces获得一个Call对象
+    suspend fun allPlaces() = placeService.allPlace().await()
 
     //Call接口的扩展函数await 这个函数又是一个挂起函数
     private suspend fun <T> Call<T>.await(): T {
