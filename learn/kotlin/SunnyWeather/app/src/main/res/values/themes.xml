@@ -2,4 +2,5 @@
 <resources>
 
     <style name="Theme.SunnyWeather" parent="Theme.AppCompat" />
+    <!-- Base application theme. -->
 </resources>

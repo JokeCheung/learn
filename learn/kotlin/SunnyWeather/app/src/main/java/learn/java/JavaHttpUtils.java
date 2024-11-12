@@ -1,8 +1,5 @@
 package learn.java;
 
-import android.util.Log;
-
-import learn.HttpCallbackListener;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -12,15 +9,14 @@ import java.net.URL;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * JAVA版本的Http库、OkHttp库的使用
  */
-public class JavaUtils {
+public class JavaHttpUtils {
 
     /**
-     * HttpURLConnection  接口封装回调实现
+     * HttpURLConnection  接口封装回调实现 需要自己写callback接口
      * @param address   网址
      * @param callback  回调接口
      */
@@ -46,8 +42,13 @@ public class JavaUtils {
             connection.disconnect();
         }
     }
+
+    public interface HttpCallbackListener {
+        void onFinish(String response);
+        void onError(Exception e);
+    }
     /**
-     * OkHttp  接口封装回调实现
+     * OkHttp  接口封装回调实现 现有接口okhttp3.Callback可用
      * @param address   网址
      * @param callback  回调接口
      */

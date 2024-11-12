@@ -14,9 +14,13 @@ public class PlaceServiceImpl implements PlaceService {
     @Autowired
     private PlaceMapper placeMapper;
 
+    @Override
+    public List<Place> allPlace() {
+        return placeMapper.allPlace();
+    }
 
     @Override
-    public List<Place> getPlaceData() {
-        return placeMapper.getPlaceData();
+    public List<Place> findPlace(String placeName) {
+        return placeMapper.findPlace(placeName);
     }
 }

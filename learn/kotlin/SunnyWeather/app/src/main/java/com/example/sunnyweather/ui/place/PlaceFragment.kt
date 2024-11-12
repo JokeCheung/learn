@@ -73,9 +73,10 @@ class PlaceFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        btn.visibility=View.GONE
         btn.setOnClickListener({
             Log.e("PlaceFragment","btn 点击")
-            viewModel.searchPlaces("")
+//            viewModel.searchPlaces("广州市")
 
 
 //            val content = editable.toString()
@@ -93,20 +94,17 @@ class PlaceFragment : Fragment() {
 //            searchPlaceEdit.text=Editable.Factory.getInstance().newEditable(viewModel.count.toString())
         })
 
-
-
-
         searchPlaceEdit.addTextChangedListener { editable ->
-//            Log.e("PlaceFragment","onActivityCreated:addTextChangedListener")
-//            val content = editable.toString()
-//            if (content.isNotEmpty()) {
-//                viewModel.searchPlaces(content)
-//            } else {
-//                rv.visibility = View.GONE
-//                bgImageView.visibility = View.VISIBLE
-//                viewModel.placeList.clear()
-//                adapter.notifyDataSetChanged()
-//            }
+            Log.e("PlaceFragment","onActivityCreated:addTextChangedListener")
+            val content = editable.toString()
+            if (content.isNotEmpty()) {
+                viewModel.searchPlaces(content)
+            } else {
+                rv.visibility = View.GONE
+                bgImageView.visibility = View.VISIBLE
+                viewModel.placeList.clear()
+                adapter.notifyDataSetChanged()
+            }
         }
 
 //        viewModel.initData()

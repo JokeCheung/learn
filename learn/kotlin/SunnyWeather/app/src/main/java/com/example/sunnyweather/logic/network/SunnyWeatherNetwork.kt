@@ -11,12 +11,23 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 object SunnyWeatherNetwork {
-    private val placeService = ServiceCreator.create(PlaceService::class.java);
+    private val placeService = ServiceCreator.create(PlaceService::class.java)
+    private val weatherService = ServiceCreator.create(WeatherService::class.java)
 
     //searchPlaces获得一个Call对象
-    suspend fun searchPlaces(query: String) = placeService.allPlace().await()
+    suspend fun searchPlaces(query: String) = placeService.searchPlaces(query).await()
+
     //searchPlaces获得一个Call对象
     suspend fun allPlaces() = placeService.allPlace().await()
+
+    //获取城市未来几天数据
+    suspend fun getDailyWeather(lng: String, lat: String) =
+        weatherService.getDailyWeather(lng, lat).await()
+
+    //获取城市实时天气数据
+    suspend fun getRealtimeWeather(lng: String, lat: String) =
+        weatherService.getRealtimeWeather(lng, lat).await()
+
 
     //Call接口的扩展函数await 这个函数又是一个挂起函数
     private suspend fun <T> Call<T>.await(): T {

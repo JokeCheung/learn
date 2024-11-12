@@ -1,6 +1,6 @@
 package com.example.sunnyweather.ui.place
 
-import android.util.Log
+  import android.util.Log
 import androidx.lifecycle.*
 import com.example.sunnyweather.logic.Repository
 import com.example.sunnyweather.logic.model.Location

@@ -1,13 +1,16 @@
 package com.example.sunnyweather.ui.place
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sunnyweather.R
+import com.example.sunnyweather.activity.WeatherActivity
 import com.example.sunnyweather.databinding.PlaceItemBinding
 import com.example.sunnyweather.logic.model.Place
 
@@ -26,14 +29,26 @@ class PlaceAdapter(private val fragment: Fragment, private val placeList: List<P
         val place = placeList[position]
         holder.placeCode.text = place.adcode
         holder.placeAddress.text = place.formatted_address
+        val position = holder.adapterPosition
+        holder.itemView.setOnClickListener {
+//            Toast.makeText(
+//                fragment.context,
+//                "点击 ${placeList[position].formatted_address}",
+//                Toast.LENGTH_SHORT
+//            ).show()
+            val intent = Intent(fragment.context, WeatherActivity::class.java).apply {
+                putExtra("adcode", placeList[position].adcode)
+            }
+            fragment.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = placeList.size
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-//        val placeName: TextView = view.findViewById(R.id.placeName)
+        //        val placeName: TextView = view.findViewById(R.id.placeName)
 //        val placeAddress: TextView = view.findViewById(R.id.placeAddress)
-        val  placeCode:TextView = binding.placeCode
+        val placeCode: TextView = binding.placeCode
         val placeAddress: TextView = binding.placeAddress
     }
 }

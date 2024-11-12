@@ -22,7 +22,8 @@ public class WebConfig implements WebMvcConfigurer {
                "/user/login",
                "/user/register",
                "/user/allUserInfo",
-               "/place/all"
+               "/place/all",
+               "/place/find"
                );
     }
 }
