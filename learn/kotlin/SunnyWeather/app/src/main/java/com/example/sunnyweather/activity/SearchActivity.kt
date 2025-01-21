@@ -8,8 +8,8 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_sunny_weather)
-        val binding= ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+//        val binding= ActivitySearchBinding.inflate(layoutInflater)
+//        setContentView(binding.root)
 
     }
 

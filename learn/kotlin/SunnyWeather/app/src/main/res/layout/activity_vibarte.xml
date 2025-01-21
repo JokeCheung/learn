@@ -7,6 +7,10 @@
     android:fitsSystemWindows="true"
     tools:context="learn.VibrateActivity">
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/navBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 <!--    <com.google.android.material.appbar.AppBarLayout-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->

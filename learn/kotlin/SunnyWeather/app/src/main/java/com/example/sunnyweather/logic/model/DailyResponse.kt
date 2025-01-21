@@ -8,12 +8,12 @@ data class DailyResponse(val status: String, val result: Result) {
     data class Daily(
         val temperature: List<Temperature>,
         val skycon: List<Skycon>,
-        val lifeIndex: LifeIndex
+        val life_index: LifeIndex
     )
 
     data class Temperature(val max: Float, val min: Float)
 
-    data class Skycon(val value: String, val date: Date)
+    data class Skycon(val value: String, val date: String)
 
     data class LifeIndex(
         val coldRisk: List<LifeDescription>,

@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity() {
             dbHelper.writableDatabase
         }
 
+        binding.testBtn.setOnClickListener {
+//            startActivity(Intent(this, WeatherActivity::class.java))
+        }
+
         binding.addBtn.setOnClickListener {
             val db = dbHelper.writableDatabase
             val value1 = ContentValues().apply {
@@ -65,12 +69,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, VibrateActivity::class.java))
             intent.putExtra("from", FROM_SUNNY_WEATHER)
             startActivity(intent)
-
-
         }
 
         binding.sunnyWeatherBtn.setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
+            startActivity(Intent(this, WeatherActivity::class.java))
             intent.putExtra("from", FROM_SUNNY_WEATHER)
             startActivity(intent)
         }

@@ -1,8 +1,6 @@
-package com.example.sunnyweather.logic.model
+package com.sunnyweather.android.logic.model
 
-data class Weather(
-    val realtime: RealtimeResponse.Realtime,
-    val dailyResponse: DailyResponse.Daily
-) {
+import com.example.sunnyweather.logic.model.DailyResponse
+import com.example.sunnyweather.logic.model.RealtimeResponse
 
-}
+class Weather(val realtime: RealtimeResponse.Realtime, val daily: DailyResponse.Daily)

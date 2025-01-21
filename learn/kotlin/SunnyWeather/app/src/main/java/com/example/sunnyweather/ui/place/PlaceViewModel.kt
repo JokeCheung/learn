@@ -1,10 +1,11 @@
 package com.example.sunnyweather.ui.place
 
-  import android.util.Log
-import androidx.lifecycle.*
-import com.example.sunnyweather.logic.Repository
-import com.example.sunnyweather.logic.model.Location
-import com.example.sunnyweather.logic.model.Place
+  import androidx.lifecycle.MutableLiveData
+  import androidx.lifecycle.Transformations
+  import androidx.lifecycle.ViewModel
+  import com.example.sunnyweather.logic.Repository
+  import com.example.sunnyweather.logic.model.Location
+  import com.example.sunnyweather.logic.model.Place
 
 class PlaceViewModel : ViewModel() {
     val placeList = ArrayList<Place>()
@@ -13,6 +14,11 @@ class PlaceViewModel : ViewModel() {
     val placeLiveData = Transformations.switchMap(searchLiveData) { query ->
         Repository.searchPlace(query)
     }
+
+    val placeLocalLiveData = Transformations.switchMap(searchLiveData) { query ->
+        Repository.searchLocalPlace(query)
+    }
+
 
 //    val placeNameData = Transformations.switchMap(placeList) {
 //        val names= ArrayList<String>()

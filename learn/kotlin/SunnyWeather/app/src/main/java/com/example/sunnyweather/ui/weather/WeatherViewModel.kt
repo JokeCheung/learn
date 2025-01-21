@@ -1,5 +1,6 @@
 package com.example.sunnyweather.ui.weather
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -16,6 +17,8 @@ class WeatherViewModel : ViewModel() {
     }
 
     fun refreshWeather(lng: String, lat: String) {
+        Log.e("测试","refreshWeather lng=${lng}")
+        Log.e("测试","refreshWeather lat=${lat}")
         locationLiveData.value = Location(lng, lat)
     }
 }
