@@ -107,7 +107,7 @@ class PlaceFragment : Fragment() {
             }
         }
 
-//        viewModel.initData()
+
         viewModel.placeLocalLiveData.observe(viewLifecycleOwner, Observer { result ->
             Log.e("PlaceFragment","viewModel:observe")
             val places = result.getOrNull()
