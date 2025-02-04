@@ -15,18 +15,17 @@ public class StateValidation implements ConstraintValidator<State,String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        System.out.println("isValid");
         //提供校验规则
         if(value == null){
-            System.out.println("1111111111");
+            System.out.println("校验规则 value == null");
             return false;
         }
 
         if(value.equals("已发布") || value.equals("草稿")){
-            System.out.println("2222222222222222");
+            System.out.println("校验规则 类型校验通过");
             return true;
         }
-        System.out.println("333333333333333");
+
         return false;
     }
 }

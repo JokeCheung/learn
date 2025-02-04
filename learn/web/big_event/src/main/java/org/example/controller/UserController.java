@@ -54,6 +54,7 @@ public class UserController {
             claims.put("username", loginUser.getUsername());
             String token = JwtUtil.genToken(claims);
             //登陆成功
+            System.out.println(loginUser.getUsername() +"登录成功");
             return Result.success(token);
         }
 

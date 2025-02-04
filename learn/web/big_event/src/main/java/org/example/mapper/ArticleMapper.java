@@ -17,6 +17,12 @@ public interface ArticleMapper {
     void add(Article article);
 
 
+    //更新分类信息
+    @Select("update article set title=#{title},content=#{content},cover_img=#{coverImg},state=#{state},category_id=#{categoryId}" +
+            " where id=#{id}")
+    void update(Article article);
+
+    List<Article> list(Integer userId, Integer categoryId, String state);
 }
 
 

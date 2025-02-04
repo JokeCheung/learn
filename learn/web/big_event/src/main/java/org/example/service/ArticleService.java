@@ -12,6 +12,9 @@ public interface ArticleService {
     //新增文章
     void add(Article article);
 
+    //更新文章
+    void update(Article article);
+
     //条件分类查询
     PageBean<Article> list(Integer pageNum, Integer pageSize, Integer categoryId, String state);
 }

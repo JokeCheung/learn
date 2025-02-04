@@ -2,6 +2,7 @@ package org.example.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.pojo.Article;
+import org.example.pojo.Category;
 import org.example.pojo.PageBean;
 import org.example.pojo.Result;
 import org.example.service.ArticleService;
@@ -32,6 +33,14 @@ public class ArticleController {
         return Result.success();
     }
 
+    //update需要从传入的请求体中获取id
+    @PutMapping
+    public Result update(@RequestBody Article article) {
+        articleService.update(article);
+        return Result.success();
+    }
+
+    @GetMapping
     public Result<PageBean<Article>> list(
         Integer pageNum,
         Integer pageSize,
