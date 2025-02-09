@@ -9,6 +9,8 @@ import org.example.utils.Md5Util;
 import org.example.utils.ThreadLocalUtil;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
@@ -24,6 +27,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @RequestMapping("/register")
     public Result<Object> register(@Pattern(regexp = "^\\S{5,16}$") String username, @Pattern(regexp = "^\\S{5,16}$") String password) {
@@ -53,6 +58,9 @@ public class UserController {
             claims.put("id", loginUser.getId());
             claims.put("username", loginUser.getUsername());
             String token = JwtUtil.genToken(claims);
+            //把token存储到redis中
+            ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+            ops.set(token,token,1, TimeUnit.DAYS);
             //登陆成功
             System.out.println(loginUser.getUsername() +"登录成功");
             return Result.success(token);
@@ -87,7 +95,7 @@ public class UserController {
     }
 
     @PatchMapping("/updatePwd")
-    public Result updatePwd(@RequestBody Map<String, String> params) {
+    public Result updatePwd(@RequestBody Map<String, String> params, @RequestHeader(name = "Authorization") String token) {
         //1.校验参数
         String oldPwd = params.get("old_pwd");
         String newPwd = params.get("new_pwd");
@@ -112,6 +120,9 @@ public class UserController {
         }
 
         userService.updatePwd(newPwd);
+        //删除redis中对应token
+        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+        ops.getOperations().delete(token);
         return Result.success();
     }
 

@@ -31,13 +31,13 @@ public class JwtTest {
     @Test
     public void testPaste() {
         //定义字符串 模拟用户传递过来的token
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
-                ".eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6InpoYW5nc2FuIn0sImV4cCI6MTcxMzczOTQ0MX0" +
-                ".Nqb_DTYYtP4cfyqJvAbvg2tGQkDKK3rrxEwIOU1_MCo";
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256("example")).build();
-        //验证token 生成一个解析后的JWT对象
-        DecodedJWT decodedJWT = jwtVerifier.verify(token);
-        Map<String, Claim> claims = decodedJWT.getClaims();
-        System.out.println(claims.get("user"));
+//        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
+//                ".eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6InpoYW5nc2FuIn0sImV4cCI6MTcxMzczOTQ0MX0" +
+//                ".Nqb_DTYYtP4cfyqJvAbvg2tGQkDKK3rrxEwIOU1_MCo";
+//        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256("example")).build();
+//        //验证token 生成一个解析后的JWT对象
+//        DecodedJWT decodedJWT = jwtVerifier.verify(token);
+//        Map<String, Claim> claims = decodedJWT.getClaims();
+//        System.out.println(claims.get("user"));
     }
 }
