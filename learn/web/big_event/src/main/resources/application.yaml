@@ -1,28 +1,48 @@
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/big_event
-    username: root
-    password: 1234
-  servlet:
-      multipart:
-        max-file-size: 20MB #单个文件的最大大小
-        max-request-size: 30MB #上传请求的总大小限制
-  data:
-    redis:
-      host: localhost
-      port: 6379
+  profiles:
+#  ############################ 和多文件配置文件名重复时 有分组active会优先使用分组名配置激活分组
+    group:
+      "dev": devServer,devDB,devSelf
+    active: dev
 
-mybatis:
-  configuration:
-    map-underscore-to-camel-case: true #开启驼峰命名、下划线命名的自动转换
-
-server:
-  port: 8080
+#  ############################ 单文件配置多环境开发
+#  profiles:
+#    active: dev
+#  #多环境开发通用属性
+#  #如果特定环境中的配置信息和通用信息冲突了，特定环境中的配置生效
+#  server:
+#   servlet:
+#    context-path: /aaa
+#---
+##开发环境
+#spring:
+#  config:
+#    activate:
+#      on-profile: dev
+#
+#server:
+#  port: 8081
+#---
+##测试环境
+#spring:
+#  config:
+#    activate:
+#      on-profile: test
+#server:
+#  port: 8082
+#---
+##生产环境
+#spring:
+#  config:
+#    activate:
+#      on-profile: pro
+#server:
+#  port: 8083
 
 # 配置优先级 0123
 
-# 端口属性配置方式
+
+#  ############################ 端口属性配置方式
 # 0.项目res目录下application.yml文件
 
 # 1.外部配置文件方式：jar包所在目录application.yml文件
