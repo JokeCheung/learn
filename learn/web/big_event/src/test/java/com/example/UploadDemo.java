@@ -16,12 +16,12 @@ public class UploadDemo {
         String endpoint = "https://oss-cn-shenzhen.aliyuncs.com";
         // 从环境变量中获取访问凭证。运行本代码示例之前，请确保已设置环境变量OSS_ACCESS_KEY_ID和OSS_ACCESS_KEY_SECRET。
 //        EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
-        //setx OSS_ACCESS_KEY_ID "LTAI5tMA6eMdQ75wfZnjfpAe"
-        //setx OSS_ACCESS_KEY_SECRET "SCU1VNMXzd6v3YuoSgJx20lIZcsBdy"
+        //setx OSS_ACCESS_KEY_ID ""
+        //setx OSS_ACCESS_KEY_SECRET ""
 
 
-        String ACCESS_KEY_ID = "LTAI5tMA6eMdQ75wfZnjfpAe";
-        String ACCESS_KEY_SECRET = "SCU1VNMXzd6v3YuoSgJx20lIZcsBdy";
+        String ACCESS_KEY_ID = "";
+        String ACCESS_KEY_SECRET = "";
 
         DefaultCredentialProvider credentialsProvider = new DefaultCredentialProvider(ACCESS_KEY_ID, ACCESS_KEY_SECRET);
 

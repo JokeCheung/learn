@@ -11,8 +11,8 @@ import java.io.InputStream;
 public class OSSUtils {
 
     private final static String END_POINT = "https://oss-cn-shenzhen.aliyuncs.com";
-    private final static String ACCESS_KEY_ID = "LTAI5tMA6eMdQ75wfZnjfpAe";
-    private final static String ACCESS_KEY_SECRET = "SCU1VNMXzd6v3YuoSgJx20lIZcsBdy";
+    private final static String ACCESS_KEY_ID = "";
+    private final static String ACCESS_KEY_SECRET = "";
     private final static String BUCKET_NAME = "mozu-20250206";
     private final static String REGION = "cn-shenzhen";
 
