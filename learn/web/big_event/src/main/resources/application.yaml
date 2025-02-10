@@ -17,4 +17,18 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true #开启驼峰命名、下划线命名的自动转换
 
+server:
+  port: 8080
 
+# 配置优先级 0123
+
+# 端口属性配置方式
+# 0.项目res目录下application.yml文件
+
+# 1.外部配置文件方式：jar包所在目录application.yml文件
+
+# 2.环境变量方式
+# server.port:8888
+
+# 3.命令行方式：jar包生成目录运行cmd
+# java -jar 文件名 --server.port=9999
